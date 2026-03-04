@@ -19,6 +19,7 @@
       --c3: #ffd60a;   /* 2048    */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
+      --cc: #c084fc;   /* credits */
     }
 
     html, body {
@@ -167,6 +168,95 @@
     .card[data-game="2048"]   { --ca: var(--c3); }
     .card[data-game="flappy"] { --ca: var(--c4); }
     .card[data-game="fnaf"]   { --ca: var(--c5); }
+    .card[data-game="credits"]{ --ca: var(--cc); }
+
+    /* ── CREDITS MODAL ── */
+    #credits-modal {
+      display: none;
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(5,5,8,0.82);
+      backdrop-filter: blur(6px);
+      align-items: center; justify-content: center;
+    }
+    #credits-modal.open { display: flex; }
+
+    .credits-box {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--cc);
+      box-shadow: 0 0 60px -10px var(--cc), inset 0 0 40px rgba(192,132,252,0.04);
+      clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+      padding: 40px 44px 44px;
+      max-width: 480px; width: 90%;
+      animation: modalIn 0.28s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes modalIn {
+      from { opacity:0; transform: scale(0.92) translateY(20px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+
+    .credits-corner { position: absolute; width: 13px; height: 13px; border-color: var(--cc); border-style: solid; opacity: .7; }
+    .credits-corner.tl { top:8px; left:8px;   border-width: 2px 0 0 2px; }
+    .credits-corner.br { bottom:8px; right:8px; border-width: 0 2px 2px 0; }
+
+    .credits-hammer {
+      font-size: 3.8rem;
+      display: block; text-align: center;
+      margin-bottom: 18px;
+      filter: drop-shadow(0 0 22px var(--cc));
+    }
+
+    .credits-tag {
+      font-size: 0.68rem; color: var(--cc);
+      letter-spacing: 0.3em; text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .credits-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.35rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-align: center;
+      color: #e9d5ff;
+      margin-bottom: 24px;
+    }
+
+    .credits-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cc), transparent);
+      opacity: 0.35; margin-bottom: 24px;
+    }
+
+    .credits-entry {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 13px;
+    }
+    .credits-entry:last-of-type { margin-bottom: 0; }
+
+    .credits-role {
+      font-size: 0.68rem; color: var(--cc);
+      letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .credits-name {
+      font-size: 0.82rem; color: var(--text);
+      letter-spacing: 0.08em;
+    }
+
+    .credits-close {
+      display: block; width: 100%; margin-top: 28px;
+      background: transparent;
+      border: 1px solid var(--cc);
+      color: var(--cc);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.78rem; letter-spacing: 0.3em; text-transform: uppercase;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .credits-close:hover {
+      background: var(--cc); color: #0c0c14;
+      box-shadow: 0 0 22px var(--cc);
+    }
 
     .corner { position: absolute; width: 11px; height: 11px; border-color: var(--ca); border-style: solid; opacity: .55; }
     .tl { top:7px; left:7px;   border-width: 2px 0 0 2px; }
@@ -221,96 +311,68 @@
 
     .play-row {
       display: flex; align-items: center; gap: 8px;
-      font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ca);
-      text-transform: uppercase; transition: gap 0.2s;
+      font-size: 0.72rem; letter-spacing: 0.25em;
+      color: var(--ca); text-transform: uppercase;
     }
-    .card:hover .play-row { gap: 14px; }
 
     .play-arr {
-      width: 26px; height: 26px;
+      width: 28px; height: 28px;
       border: 1px solid var(--ca);
       display: grid; place-items: center;
-      font-size: 0.85rem;
-      transition: background 0.2s, color 0.2s;
+      font-size: 0.65rem;
+      transition: background 0.2s, box-shadow 0.2s;
     }
-    .card:hover .play-arr { background: var(--ca); color: #000; }
+    .card:hover .play-arr {
+      background: var(--ca); color: #0c0c14;
+      box-shadow: 0 0 14px var(--ca);
+    }
 
     .tag {
-      font-size: 0.62rem; padding: 3px 9px;
-      border: 1px solid var(--border); color: var(--dim);
-      letter-spacing: 0.15em; text-transform: uppercase;
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      color: var(--dim); border: 1px solid var(--border);
+      padding: 4px 10px; text-transform: uppercase;
+    }
+
+    /* Footer */
+    .hub-footer {
+      margin-top: 64px;
+      font-size: 0.65rem; letter-spacing: 0.3em;
+      color: var(--dim); text-transform: uppercase;
+      text-align: center;
     }
 
     /* ── GAME VIEW ── */
     #game-topbar {
-      height: 52px; flex-shrink: 0;
-      background: rgba(5,5,8,0.95);
-      border-bottom: 1px solid var(--border);
+      height: 48px; flex-shrink: 0;
+      background: rgba(12,12,20,0.97);
+      border-bottom: 1px solid var(--active-accent, var(--c1));
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 20px;
-      backdrop-filter: blur(10px);
-      z-index: 2;
+      padding: 0 18px;
+      box-shadow: 0 2px 20px -4px var(--active-accent, var(--c1));
     }
 
-    .tb-left { display: flex; align-items: center; gap: 14px; }
+    .tb-left { display: flex; align-items: center; gap: 16px; }
 
-    #back-btn {
-      display: flex; align-items: center; gap: 8px;
+    #back-btn, #fs-btn {
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #e0e0f0;
+      border: 1px solid var(--active-accent, var(--c1));
+      color: var(--active-accent, var(--c1));
       font-family: 'Share Tech Mono', monospace;
-      font-size: 0.75rem; letter-spacing: 0.2em;
-      text-transform: uppercase; padding: 6px 14px;
-      cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s;
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      padding: 6px 14px; cursor: pointer;
+      transition: background 0.2s, color 0.2s;
     }
-    #back-btn:hover { border-color: var(--active-accent, var(--c1)); color: var(--active-accent, var(--c1)); }
+    #back-btn:hover, #fs-btn:hover {
+      background: var(--active-accent, var(--c1)); color: #050508;
+    }
 
     #game-title-bar {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 0.88rem; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--active-accent, var(--c1));
+      font-size: 0.78rem; letter-spacing: 0.2em;
+      color: var(--text); opacity: 0.7;
     }
 
-    .tb-right { display: flex; align-items: center; gap: 10px; }
-
-    #fs-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--active-accent, var(--c1));
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.75rem; letter-spacing: 0.15em;
-      text-transform: uppercase; padding: 6px 14px;
-      cursor: pointer; transition: background 0.2s, color 0.2s;
-    }
-    #fs-btn:hover { background: var(--active-accent, var(--c1)); color: #000; }
-
-    #game-frame-wrap {
-      flex: 1;
-      position: relative;
-      background: #000;
-    }
-
-    #game-frame {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      border: none;
-    }
-
-    /* fullscreen: hide topbar */
-    :fullscreen #game-topbar { display: none; }
-
-    /* hub footer */
-    .hub-footer {
-      margin-top: 70px;
-      text-align: center;
-      font-size: 0.68rem;
-      letter-spacing: 0.35em;
-      color: var(--dim);
-      text-transform: uppercase;
-    }
-    .hub-footer span { color: var(--c1); }
+    #game-frame-wrap { flex: 1; position: relative; }
+    #game-frame { width: 100%; height: 100%; border: none; display: block; background: #000; }
   </style>
 </head>
 <body>
@@ -321,14 +383,13 @@
 <!-- ══════════════ HUB ══════════════ -->
 <div id="hub">
   <div class="hub-inner">
-
     <header class="header">
       <div class="logo-row">
         <div class="logo-gem">🕹</div>
         <h1>Game Jammer</h1>
         <div class="logo-gem">🕹</div>
       </div>
-      <p class="tagline">Select your game &nbsp;///&nbsp; No limits &nbsp;///&nbsp; Play free</p>
+      <p class="tagline">Select your game &nbsp;//&nbsp; All systems go</p>
       <div class="hdivider"></div>
     </header>
 
@@ -419,6 +480,23 @@
         </div>
       </div>
 
+      <div class="card" data-game="credits" onclick="openCredits()">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">CRD</div>
+          <div class="art-icon">🔨</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// META_01</div>
+          <div class="card-title">Credits</div>
+          <div class="card-desc">The minds behind the machine. Built with late nights and bad decisions.</div>
+          <div class="card-foot">
+            <div class="play-row">View <div class="play-arr">▶</div></div>
+            <div class="tag">Info</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <footer class="hub-footer">
@@ -443,11 +521,36 @@
   </div>
 </div>
 
+<!-- ══════════════ CREDITS MODAL ══════════════ -->
+<div id="credits-modal" onclick="closeCredits(event)">
+  <div class="credits-box">
+    <div class="credits-corner tl"></div>
+    <div class="credits-corner br"></div>
+    <span class="credits-hammer">🔨</span>
+    <div class="credits-tag">// META_01</div>
+    <div class="credits-title">Credits</div>
+    <div class="credits-divider"></div>
+    <div class="credits-entry">
+      <span class="credits-role">Developer</span>
+      <span class="credits-name">Ayden Brown</span>
+    </div>
+    <div class="credits-entry">
+      <span class="credits-role">Design</span>
+      <span class="credits-name">Ayden Brown</span>
+    </div>
+    <div class="credits-entry">
+      <span class="credits-role">Game Curation</span>
+      <span class="credits-name">Ayden Brown</span>
+    </div>
+    <div class="credits-entry">
+      <span class="credits-role">Built With</span>
+      <span class="credits-name">HTML</span>
+    </div>
+    <button class="credits-close" onclick="closeCredits()">[ Close ]</button>
+  </div>
+</div>
+
 <script>
-  /* ── Game data ──
-     Replace each `html` value with the full HTML string of your game.
-     Everything between the backticks becomes the game content.
-  */
   const GAMES = {
     snake: {
       label: '🐍 Snake',
@@ -497,20 +600,15 @@
   function openGame(id) {
     const g = GAMES[id];
     if (!g) return;
-
     root.style.setProperty('--active-accent', g.accent);
     titleBar.textContent = g.label;
-
-    // External URL game
     if (g.src) {
       frame.removeAttribute('srcdoc');
       frame.src = g.src;
     } else {
-      // Clear src first, then set srcdoc
       frame.removeAttribute('src');
       frame.srcdoc = g.html;
     }
-
     gameView.classList.add('active');
     document.getElementById('hub').style.pointerEvents = 'none';
   }
@@ -528,7 +626,6 @@
   function toggleFS() {
     if (!document.fullscreenElement) {
       document.getElementById('game-frame-wrap').requestFullscreen().catch(e => {
-        // fallback: try documentElement
         root.requestFullscreen().catch(err => console.warn(err));
       });
     } else {
@@ -540,15 +637,20 @@
     fsBtn.textContent = document.fullscreenElement ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
   });
 
-  // Keyboard shortcuts
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && gameView.classList.contains('active') && !document.fullscreenElement) {
-      closeGame();
-    }
-    if ((e.key === 'f' || e.key === 'F') && gameView.classList.contains('active')) {
-      toggleFS();
-    }
+    if (e.key === 'Escape' && gameView.classList.contains('active') && !document.fullscreenElement) closeGame();
+    if (e.key === 'Escape' && document.getElementById('credits-modal').classList.contains('open')) closeCredits();
+    if ((e.key === 'f' || e.key === 'F') && gameView.classList.contains('active')) toggleFS();
   });
+
+  function openCredits() {
+    document.getElementById('credits-modal').classList.add('open');
+  }
+  function closeCredits(e) {
+    if (!e || e.target === document.getElementById('credits-modal') || e.currentTarget === document.querySelector('.credits-close')) {
+      document.getElementById('credits-modal').classList.remove('open');
+    }
+  }
 </script>
 </body>
 </html>
