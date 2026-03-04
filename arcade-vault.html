@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ARCADE VAULT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050508;
+      --panel: #0c0c14;
+      --border: #1a1a2e;
+      --text: #e0e0f0;
+      --dim: #44445a;
+      --c1: #00ffe7;   /* snake   */
+      --c2: #ff2d55;   /* tetris  */
+      --c3: #ffd60a;   /* 2048    */
+      --c4: #bf5af2;   /* flappy  */
+      --c5: #ff6a00;   /* fnaf    */
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      overflow: hidden;
+    }
+
+    /* ── VIEWS ── */
+    #hub, #game-view {
+      position: fixed; inset: 0;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    #hub { z-index: 10; overflow-y: auto; overflow-x: hidden; }
+    #game-view { z-index: 20; display: flex; flex-direction: column; pointer-events: none; opacity: 0; transform: scale(1.04); }
+    #game-view.active { pointer-events: all; opacity: 1; transform: scale(1); }
+
+    /* ── ANIMATED BG ── */
+    .grid-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,255,231,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,231,0.025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      animation: bgScroll 25s linear infinite;
+    }
+    @keyframes bgScroll {
+      from { background-position: 0 0; }
+      to   { background-position: 44px 44px; }
+    }
+
+    /* scanlines */
+    .scanlines {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.1) 3px, rgba(0,0,0,0.1) 4px
+      );
+    }
+
+    /* ── HUB ── */
+    .hub-inner {
+      position: relative; z-index: 1;
+      min-height: 100%;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 60px 24px 80px;
+    }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 64px; }
+
+    .logo-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; margin-bottom: 14px;
+    }
+
+    .logo-gem {
+      width: 44px; height: 44px;
+      border: 2px solid var(--c1);
+      display: grid; place-items: center;
+      font-size: 22px;
+      box-shadow: 0 0 18px var(--c1), inset 0 0 10px rgba(0,255,231,0.1);
+      animation: gemPulse 3s ease-in-out infinite;
+    }
+    @keyframes gemPulse {
+      0%,100% { box-shadow: 0 0 18px var(--c1), inset 0 0 10px rgba(0,255,231,0.1); }
+      50%      { box-shadow: 0 0 40px var(--c1), inset 0 0 20px rgba(0,255,231,0.2); }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.2rem, 6vw, 4.8rem);
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(100deg, var(--c1) 0%, #fff 45%, var(--c2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: titleFlicker 9s infinite;
+    }
+    @keyframes titleFlicker {
+      0%,94%,100% { opacity:1; } 95% { opacity:.6; } 97% { opacity:1; } 99% { opacity:.3; }
+    }
+
+    .tagline {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      letter-spacing: 0.45em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    .hdivider {
+      width: min(560px, 90%);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--c1), transparent);
+      margin: 18px auto 0;
+      opacity: 0.4;
+    }
+
+    /* Game grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 1080px;
+    }
+
+    /* Card */
+    .card {
+      --ca: var(--c1);
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      overflow: hidden;
+      clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+      transition: transform 0.22s, border-color 0.22s, box-shadow 0.22s;
+      animation: cardIn 0.5s both;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+    .card:nth-child(5) { animation-delay: 0.33s; }
+    @keyframes cardIn {
+      from { opacity:0; transform: translateY(28px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% -10%, color-mix(in srgb, var(--ca) 12%, transparent), transparent 65%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .card:hover { transform: translateY(-7px); border-color: var(--ca); box-shadow: 0 8px 40px -10px var(--ca); }
+    .card:hover::before { opacity: 1; }
+
+    .card[data-game="snake"]  { --ca: var(--c1); }
+    .card[data-game="tetris"] { --ca: var(--c2); }
+    .card[data-game="2048"]   { --ca: var(--c3); }
+    .card[data-game="flappy"] { --ca: var(--c4); }
+    .card[data-game="fnaf"]   { --ca: var(--c5); }
+
+    .corner { position: absolute; width: 11px; height: 11px; border-color: var(--ca); border-style: solid; opacity: .55; }
+    .tl { top:7px; left:7px;   border-width: 2px 0 0 2px; }
+    .br { bottom:7px; right:7px; border-width: 0 2px 2px 0; }
+
+    .card-art {
+      height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+
+    .art-bg {
+      position: absolute; inset: 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 7rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ca); opacity: 0.04;
+      letter-spacing: -0.05em;
+      user-select: none;
+    }
+
+    .art-icon {
+      font-size: 4.5rem; z-index: 1;
+      filter: drop-shadow(0 0 18px var(--ca));
+      transition: transform 0.3s, filter 0.3s;
+    }
+    .card:hover .art-icon {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 36px var(--ca));
+    }
+
+    .card-body {
+      padding: 18px 22px 22px;
+      border-top: 1px solid var(--border);
+    }
+
+    .card-num { font-size: 0.68rem; color: var(--ca); letter-spacing: 0.3em; margin-bottom: 5px; }
+
+    .card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .card-desc { font-size: 0.75rem; color: var(--dim); line-height: 1.65; }
+
+    .card-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 16px;
+    }
+
+    .play-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ca);
+      text-transform: uppercase; transition: gap 0.2s;
+    }
+    .card:hover .play-row { gap: 14px; }
+
+    .play-arr {
+      width: 26px; height: 26px;
+      border: 1px solid var(--ca);
+      display: grid; place-items: center;
+      font-size: 0.85rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .card:hover .play-arr { background: var(--ca); color: #000; }
+
+    .tag {
+      font-size: 0.62rem; padding: 3px 9px;
+      border: 1px solid var(--border); color: var(--dim);
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+
+    /* ── GAME VIEW ── */
+    #game-topbar {
+      height: 52px; flex-shrink: 0;
+      background: rgba(5,5,8,0.95);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px;
+      backdrop-filter: blur(10px);
+      z-index: 2;
+    }
+
+    .tb-left { display: flex; align-items: center; gap: 14px; }
+
+    #back-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e0e0f0;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 6px 14px;
+      cursor: pointer; transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    #back-btn:hover { border-color: var(--active-accent, var(--c1)); color: var(--active-accent, var(--c1)); }
+
+    #game-title-bar {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.88rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--active-accent, var(--c1));
+    }
+
+    .tb-right { display: flex; align-items: center; gap: 10px; }
+
+    #fs-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--active-accent, var(--c1));
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; padding: 6px 14px;
+      cursor: pointer; transition: background 0.2s, color 0.2s;
+    }
+    #fs-btn:hover { background: var(--active-accent, var(--c1)); color: #000; }
+
+    #game-frame-wrap {
+      flex: 1;
+      position: relative;
+      background: #000;
+    }
+
+    #game-frame {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+    }
+
+    /* fullscreen: hide topbar */
+    :fullscreen #game-topbar { display: none; }
+
+    /* hub footer */
+    .hub-footer {
+      margin-top: 70px;
+      text-align: center;
+      font-size: 0.68rem;
+      letter-spacing: 0.35em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+    .hub-footer span { color: var(--c1); }
+  </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<!-- ══════════════ HUB ══════════════ -->
+<div id="hub">
+  <div class="hub-inner">
+
+    <header class="header">
+      <div class="logo-row">
+        <div class="logo-gem">🕹</div>
+        <h1>Arcade Vault</h1>
+        <div class="logo-gem">🕹</div>
+      </div>
+      <p class="tagline">Select your game &nbsp;///&nbsp; No limits &nbsp;///&nbsp; Play free</p>
+      <div class="hdivider"></div>
+    </header>
+
+    <div class="grid">
+
+      <div class="card" data-game="snake" onclick="openGame('snake')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">SNK</div>
+          <div class="art-icon">🐍</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_01</div>
+          <div class="card-title">Snake</div>
+          <div class="card-desc">Guide the snake. Eat. Grow. Don't crash. Classic survival reflex test.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Classic</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="tetris" onclick="openGame('tetris')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">TET</div>
+          <div class="art-icon">🟥</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_02</div>
+          <div class="card-title">Tetris</div>
+          <div class="card-desc">Stack the falling blocks. Clear lines. How long can you hold on?</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Puzzle</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="2048" onclick="openGame('2048')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">2048</div>
+          <div class="art-icon">🔢</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_03</div>
+          <div class="card-title">2048</div>
+          <div class="card-desc">Slide and merge tiles to reach the legendary 2048 block. Think fast.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Strategy</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="flappy" onclick="openGame('flappy')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">FLY</div>
+          <div class="art-icon">🐦</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_04</div>
+          <div class="card-title">Flappy Bird</div>
+          <div class="card-desc">Tap to flap. Dodge the pipes. Simple. Brutal. Completely addictive.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Reflex</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="fnaf" onclick="openGame('fnaf')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">FNAF</div>
+          <div class="art-icon">🐻</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_05</div>
+          <div class="card-title">Five Nights at Epstein's</div>
+          <div class="card-desc">Survive the night. Watch the cameras. Don't run out of power.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Horror</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="hub-footer">
+      <span>ARCADE VAULT</span> &nbsp;///&nbsp; All games run locally &nbsp;///&nbsp; <span>UNBLOCKED</span>
+    </footer>
+  </div>
+</div>
+
+<!-- ══════════════ GAME VIEW ══════════════ -->
+<div id="game-view">
+  <div id="game-topbar">
+    <div class="tb-left">
+      <button id="back-btn" onclick="closeGame()">◀ Back</button>
+      <span id="game-title-bar">—</span>
+    </div>
+    <div class="tb-right">
+      <button id="fs-btn" onclick="toggleFS()">⛶ Fullscreen</button>
+    </div>
+  </div>
+  <div id="game-frame-wrap">
+    <iframe id="game-frame" allowfullscreen allow="fullscreen"></iframe>
+  </div>
+</div>
+
+<script>
+  /* ── Game data ──
+     Replace each `html` value with the full HTML string of your game.
+     Everything between the backticks becomes the game content.
+  */
+  const GAMES = {
+    snake: {
+      label: '🐍 Snake',
+      accent: '#00ffe7',
+      html: `<!DOCTYPE html><html><body style="background:#050a08;color:#00ffe7;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;margin:0;background-image:radial-gradient(ellipse at 50% 50%,#0a2018,#050a08)">
+        <div style="font-size:5rem;filter:drop-shadow(0 0 30px #00ffe7)">🐍</div>
+        <div style="font-size:1.6rem;letter-spacing:.25em;font-weight:bold">SNAKE</div>
+        <div style="opacity:.45;font-size:.8rem;letter-spacing:.15em;text-align:center;max-width:300px">Paste your Snake game HTML inside<br>GAMES.snake.html in the script</div>
+      </body></html>`
+    },
+    tetris: {
+      label: '🟥 Tetris',
+      accent: '#ff2d55',
+      html: `<!DOCTYPE html><html><body style="background:#0a0508;color:#ff2d55;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;margin:0;background-image:radial-gradient(ellipse at 50% 50%,#200810,#0a0508)">
+        <div style="font-size:5rem;filter:drop-shadow(0 0 30px #ff2d55)">🟥</div>
+        <div style="font-size:1.6rem;letter-spacing:.25em;font-weight:bold">TETRIS</div>
+        <div style="opacity:.45;font-size:.8rem;letter-spacing:.15em;text-align:center;max-width:300px">Paste your Tetris game HTML inside<br>GAMES.tetris.html in the script</div>
+      </body></html>`
+    },
+    '2048': {
+      label: '🔢 2048',
+      accent: '#ffd60a',
+      html: `<!DOCTYPE html><html><body style="background:#080700;color:#ffd60a;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;margin:0;background-image:radial-gradient(ellipse at 50% 50%,#1a1400,#080700)">
+        <div style="font-size:5rem;filter:drop-shadow(0 0 30px #ffd60a)">🔢</div>
+        <div style="font-size:1.6rem;letter-spacing:.25em;font-weight:bold">2048</div>
+        <div style="opacity:.45;font-size:.8rem;letter-spacing:.15em;text-align:center;max-width:300px">Paste your 2048 game HTML inside<br>GAMES['2048'].html in the script</div>
+      </body></html>`
+    },
+    flappy: {
+      label: '🐦 Flappy Bird',
+      accent: '#bf5af2',
+      src: 'https://s3-eu-west-1.amazonaws.com/apps.playcanvas.com/a15aec72/index.html'
+    },
+    fnaf: {
+      label: '🐻 Five Nights at Epstein\'s',
+      accent: '#ff6a00',
+      src: 'https://fivenightsatepsteins.org/fivenightsatepsteins-online/embed'
+    }
+  };
+
+  const gameView  = document.getElementById('game-view');
+  const frame     = document.getElementById('game-frame');
+  const titleBar  = document.getElementById('game-title-bar');
+  const fsBtn     = document.getElementById('fs-btn');
+  const root      = document.documentElement;
+
+  function openGame(id) {
+    const g = GAMES[id];
+    if (!g) return;
+
+    root.style.setProperty('--active-accent', g.accent);
+    titleBar.textContent = g.label;
+
+    // External URL game
+    if (g.src) {
+      frame.removeAttribute('srcdoc');
+      frame.src = g.src;
+    } else {
+      // Clear src first, then set srcdoc
+      frame.removeAttribute('src');
+      frame.srcdoc = g.html;
+    }
+
+    gameView.classList.add('active');
+    document.getElementById('hub').style.pointerEvents = 'none';
+  }
+
+  function closeGame() {
+    gameView.classList.remove('active');
+    document.getElementById('hub').style.pointerEvents = '';
+    if (document.fullscreenElement) document.exitFullscreen();
+    setTimeout(() => {
+      frame.removeAttribute('srcdoc');
+      frame.removeAttribute('src');
+    }, 420);
+  }
+
+  function toggleFS() {
+    if (!document.fullscreenElement) {
+      document.getElementById('game-frame-wrap').requestFullscreen().catch(e => {
+        // fallback: try documentElement
+        root.requestFullscreen().catch(err => console.warn(err));
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    fsBtn.textContent = document.fullscreenElement ? '✕ Exit Fullscreen' : '⛶ Fullscreen';
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && gameView.classList.contains('active') && !document.fullscreenElement) {
+      closeGame();
+    }
+    if ((e.key === 'f' || e.key === 'F') && gameView.classList.contains('active')) {
+      toggleFS();
+    }
+  });
+</script>
+</body>
+</html>
