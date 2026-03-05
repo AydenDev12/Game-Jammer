@@ -20,6 +20,10 @@
       --c3: #ffd60a;   /* 2048    */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
+      --c6: #c8a96e;   /* bendy   */
+      --c7: #ff007f;   /* fnf     */
+      --c4: #bf5af2;   /* flappy  */
+      --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
     }
 
@@ -169,6 +173,8 @@
     .card[data-game="2048"]   { --ca: var(--c3); }
     .card[data-game="flappy"] { --ca: var(--c4); }
     .card[data-game="fnaf"]   { --ca: var(--c5); }
+    .card[data-game="bendy"]  { --ca: var(--c6); }
+    .card[data-game="fnf"]    { --ca: var(--c7); }
     .card[data-game="credits"]{ --ca: var(--cc); }
 
     /* ── CREDITS MODAL ── */
@@ -498,6 +504,23 @@
         </div>
       </div>
 
+      <div class="card" data-game="fnf" onclick="openGame('fnf')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">FNF</div>
+          <div class="art-icon">🎤</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_07</div>
+          <div class="card-title">Friday Night Funkin'</div>
+          <div class="card-desc">Hit the arrows to the beat. Don't miss a note or it's game over.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Rhythm</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" data-game="credits" onclick="openCredits()">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
@@ -554,6 +577,12 @@
 <!-- Preload Block Blast in background -->
 <iframe id="blockblast-preload"
   src="https://raw.githack.com/genizy/bl/main/index.html"
+  style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
+  allowfullscreen allow="fullscreen; autoplay"></iframe>
+
+<!-- Preload FNF in background -->
+<iframe id="fnf-preload"
+  src="https://raw.githack.com/genizy/fridayfunk/09fdd5f1fa4ddb304dff7bae6f6af49eda664e8f/index.html"
   style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
   allowfullscreen allow="fullscreen; autoplay"></iframe>
 
@@ -625,6 +654,11 @@
       label: '🖤 Bendy and the Ink Machine',
       accent: '#c8a96e',
       src: 'https://raw.githack.com/genizy/web-port/main/bendy/index.html'
+    },
+    fnf: {
+      label: '🎤 Friday Night Funkin\'',
+      accent: '#ff007f',
+      src: 'https://raw.githack.com/genizy/fridayfunk/09fdd5f1fa4ddb304dff7bae6f6af49eda664e8f/index.html'
     }
   };
 
