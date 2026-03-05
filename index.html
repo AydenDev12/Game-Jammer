@@ -15,9 +15,7 @@
       --border: #1a1a2e;
       --text: #e0e0f0;
       --dim: #44445a;
-      --c1: #00ffe7;   /* snake   */
       --c2: #ff2d55;   /* block blast  */
-      --c3: #ffd60a;   /* 2048    */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --c6: #c8a96e;   /* bendy   */
@@ -25,8 +23,8 @@
       --c8: #34c759;   /* retrobowl */
       --c9: #ffe135;   /* baldi     */
       --ca: #7ed321;   /* gorilla   */
-      --cb: #e8c4a0;   /* pp        */
       --cd: #e52521;   /* sm64      */
+      --ce: #4a90d9;   /* nmn       */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
@@ -173,9 +171,7 @@
     .card:hover { transform: translateY(-7px); border-color: var(--ca); box-shadow: 0 8px 40px -10px var(--ca); }
     .card:hover::before { opacity: 1; }
 
-    .card[data-game="snake"]  { --ca: var(--c1); }
     .card[data-game="blockblast"] { --ca: var(--c2); }
-    .card[data-game="2048"]   { --ca: var(--c3); }
     .card[data-game="flappy"] { --ca: var(--c4); }
     .card[data-game="fnaf"]   { --ca: var(--c5); }
     .card[data-game="bendy"]  { --ca: var(--c6); }
@@ -183,8 +179,8 @@
     .card[data-game="retrobowl"] { --ca: var(--c8); }
     .card[data-game="baldi"]     { --ca: var(--c9); }
     .card[data-game="gorilla"]   { --ca: var(--ca); }
-    .card[data-game="pp"]        { --ca: var(--cb); }
     .card[data-game="sm64"]      { --ca: var(--cd); }
+    .card[data-game="nmn"]       { --ca: var(--ce); }
     .card[data-game="credits"]{ --ca: var(--cc); }
 
     /* ── CREDITS MODAL ── */
@@ -412,23 +408,6 @@
 
     <div class="grid">
 
-      <div class="card" data-game="snake" onclick="openGame('snake')">
-        <div class="corner tl"></div><div class="corner br"></div>
-        <div class="card-art">
-          <div class="art-bg">SNK</div>
-          <div class="art-icon">🐍</div>
-        </div>
-        <div class="card-body">
-          <div class="card-num">// GAME_01</div>
-          <div class="card-title">Snake</div>
-          <div class="card-desc">Guide the snake. Eat. Grow. Don't crash. Classic survival reflex test.</div>
-          <div class="card-foot">
-            <div class="play-row">Play <div class="play-arr">▶</div></div>
-            <div class="tag">Classic</div>
-          </div>
-        </div>
-      </div>
-
       <div class="card" data-game="blockblast" onclick="openGame('blockblast')">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
@@ -442,23 +421,6 @@
           <div class="card-foot">
             <div class="play-row">Play <div class="play-arr">▶</div></div>
             <div class="tag">Puzzle</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" data-game="2048" onclick="openGame('2048')">
-        <div class="corner tl"></div><div class="corner br"></div>
-        <div class="card-art">
-          <div class="art-bg">2048</div>
-          <div class="art-icon">🔢</div>
-        </div>
-        <div class="card-body">
-          <div class="card-num">// GAME_03</div>
-          <div class="card-title">2048</div>
-          <div class="card-desc">Slide and merge tiles to reach the legendary 2048 block. Think fast.</div>
-          <div class="card-foot">
-            <div class="play-row">Play <div class="play-arr">▶</div></div>
-            <div class="tag">Strategy</div>
           </div>
         </div>
       </div>
@@ -582,23 +544,6 @@
         </div>
       </div>
 
-      <div class="card" data-game="pp" onclick="openGame('pp')">
-        <div class="corner tl"></div><div class="corner br"></div>
-        <div class="card-art">
-          <div class="art-bg">PPG</div>
-          <div class="art-icon">🧍</div>
-        </div>
-        <div class="card-body">
-          <div class="card-num">// GAME_11</div>
-          <div class="card-title">People Playground</div>
-          <div class="card-desc">A physics sandbox where anything can happen to anyone.</div>
-          <div class="card-foot">
-            <div class="play-row">Play <div class="play-arr">▶</div></div>
-            <div class="tag">Sandbox</div>
-          </div>
-        </div>
-      </div>
-
       <div class="card" data-game="sm64" onclick="openGame('sm64')">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
@@ -612,6 +557,23 @@
           <div class="card-foot">
             <div class="play-row">Play <div class="play-arr">▶</div></div>
             <div class="tag">Platform</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="nmn" onclick="openGame('nmn')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">NMN</div>
+          <div class="art-icon">🚪</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_11</div>
+          <div class="card-title">Not My Neighbor</div>
+          <div class="card-desc">Check IDs. Spot the doppelgangers. Don't let the wrong one in.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Horror</div>
           </div>
         </div>
       </div>
@@ -712,15 +674,6 @@
 
 <script>
   const GAMES = {
-    snake: {
-      label: '🐍 Snake',
-      accent: '#00ffe7',
-      html: `<!DOCTYPE html><html><body style="background:#050a08;color:#00ffe7;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;margin:0;background-image:radial-gradient(ellipse at 50% 50%,#0a2018,#050a08)">
-        <div style="font-size:5rem;filter:drop-shadow(0 0 30px #00ffe7)">🐍</div>
-        <div style="font-size:1.6rem;letter-spacing:.25em;font-weight:bold">SNAKE</div>
-        <div style="opacity:.45;font-size:.8rem;letter-spacing:.15em;text-align:center;max-width:300px">Paste your Snake game HTML inside<br>GAMES.snake.html in the script</div>
-      </body></html>`
-    },
     blockblast: {
       label: '💥 Block Blast',
       accent: '#ff2d55',
@@ -755,15 +708,6 @@
     document.body.appendChild(script);
   <\/script>
 </body></html>`
-    },
-    '2048': {
-      label: '🔢 2048',
-      accent: '#ffd60a',
-      html: `<!DOCTYPE html><html><body style="background:#080700;color:#ffd60a;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;margin:0;background-image:radial-gradient(ellipse at 50% 50%,#1a1400,#080700)">
-        <div style="font-size:5rem;filter:drop-shadow(0 0 30px #ffd60a)">🔢</div>
-        <div style="font-size:1.6rem;letter-spacing:.25em;font-weight:bold">2048</div>
-        <div style="opacity:.45;font-size:.8rem;letter-spacing:.15em;text-align:center;max-width:300px">Paste your 2048 game HTML inside<br>GAMES['2048'].html in the script</div>
-      </body></html>`
     },
     flappy: {
       label: '🐦 Flappy Bird',
@@ -875,44 +819,37 @@
   <\/script>
 </body></html>`
     },
-    pp: {
-      label: '🧍 People Playground',
-      accent: '#e8c4a0',
-      html: `<!DOCTYPE html><html lang="en-us"><head>
-  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/people-playground/">
+    nmn: {
+      label: '🚪 Not My Neighbor',
+      accent: '#4a90d9',
+      html: `<!DOCTYPE html><html lang="en"><head>
+  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@de75523557e46f375fc9173a9a0c0d34d8ed34f9/thats-not-my-neighbor/">
   <meta charset="utf-8">
-  <link rel="stylesheet" href="TemplateData/style.css">
-  <title>People Playground</title>
-  <style>html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%;}#unity-container{width:100%;height:100%;position:fixed;top:0;left:0;}</style>
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+  <title>That's Not My Neighbor</title>
+  <link rel="stylesheet" href="style.css">
+  <style>body,html{margin:0;padding:0;background:#000;overflow:hidden;}canvas{display:block;}</style>
 </head><body>
-  <div id="loading-text" style="color:black;font-size:48px;font-family:cursive;text-align:center;margin-top:20px;">LOADING...</div>
-  <div id="unity-container" class="unity-desktop">
-    <canvas id="unity-canvas" tabindex="-1" width="1311" height="852" style="width:1311px;height:852px;"></canvas>
-    <div id="unity-loading-bar" style="display:block;">
-      <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
-    </div>
-    <div id="unity-warning"></div>
+  <div id="loading-text" style="color:white;font-family:cursive;font-size:48px;text-align:center;margin-top:20px;">LOADING...</div>
+  <canvas id="canvas" tabindex="0" width="1311" height="852" style="position:absolute;top:0;left:0;width:1311px;height:852px;"></canvas>
+  <div id="status">
+    <progress id="status-progress"></progress>
+    <div id="status-notice"></div>
   </div>
+  <script src="thats-not-my-neighbor.js"><\/script>
   <script>
-    var container=document.querySelector("#unity-container");
-    var canvas=document.querySelector("#unity-canvas");
-    var loadingBar=document.querySelector("#unity-loading-bar");
-    var progressBarFull=document.querySelector("#unity-progress-bar-full");
-    var warningBanner=document.querySelector("#unity-warning");
-    function unityShowBanner(msg,type){var div=document.createElement('div');div.innerHTML=msg;warningBanner.appendChild(div);if(type=='error')div.style='background:red;padding:10px;';else if(type=='warning'){div.style='background:yellow;padding:10px;';setTimeout(()=>{warningBanner.removeChild(div);warningBanner.style.display=warningBanner.children.length?'block':'none';},5000);}warningBanner.style.display=warningBanner.children.length?'block':'none';}
-    function mergeFiles(fileParts){return new Promise((resolve,reject)=>{let buffers=[];function fetchPart(index){if(index>=fileParts.length){resolve(URL.createObjectURL(new Blob(buffers)));return;}fetch(fileParts[index]).then(r=>r.arrayBuffer()).then(d=>{buffers.push(d);fetchPart(index+1);}).catch(reject);}fetchPart(0);});}
-    function getParts(file,start,end){let p=[];for(let i=start;i<=end;i++)p.push(file+".part"+i);return p;}
-    Promise.all([mergeFiles(getParts("Build/PPG.wasm",1,3)),mergeFiles(getParts("Build/PPG.data",1,6))]).then(([wasmUrl,dataUrl])=>{
-      container.hidden=false;
-      var config={dataUrl:dataUrl,frameworkUrl:"Build/PPG.framework.js",codeUrl:wasmUrl,streamingAssetsUrl:"StreamingAssets",companyName:"Studio Minus",productName:"People Playground",productVersion:"0"};
-      if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){var meta=document.createElement('meta');meta.name='viewport';meta.content='width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,shrink-to-fit=yes';document.head.appendChild(meta);container.className="unity-mobile";canvas.className="unity-mobile";}else{function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.width=window.innerWidth+"px";canvas.style.height=window.innerHeight+"px";}resizeCanvas();window.addEventListener('resize',resizeCanvas);}
-      loadingBar.style.display="block";
-      var script=document.createElement("script");
-      script.src="Build/PPG.loader.js";
-      script.onload=()=>{createUnityInstance(canvas,config,(progress)=>{progressBarFull.style.width=100*progress+"%";}).then(()=>{loadingBar.style.display="none";document.querySelector("#loading-text").remove();}).catch(alert);};
-      document.body.appendChild(script);
-    });
+    const GODOT_CONFIG={args:[],canvasResizePolicy:2,ensureCrossOriginIsolationHeaders:false,executable:"thats-not-my-neighbor",experimentalVK:false,fileSizes:{"thats-not-my-neighbor.pck":410934256,"thats-not-my-neighbor.wasm":43444261},focusCanvas:true,gdextensionLibs:[]};
+    const GODOT_THREADS_ENABLED=false;
+    const engine=new Engine(GODOT_CONFIG);
+    const statusOverlay=document.getElementById('status');
+    const statusProgress=document.getElementById('status-progress');
+    const statusNotice=document.getElementById('status-notice');
+    let initializing=true,statusMode='';
+    function setStatusMode(mode){if(statusMode===mode||!initializing)return;if(mode==='hidden'){statusOverlay.remove();initializing=false;document.getElementById('loading-text').remove();return;}statusOverlay.style.visibility='visible';statusProgress.style.display=mode==='progress'?'block':'none';statusNotice.style.display=mode==='notice'?'block':'none';statusMode=mode;}
+    function setStatusNotice(text){while(statusNotice.lastChild)statusNotice.removeChild(statusNotice.lastChild);text.split('\\n').forEach(l=>{statusNotice.appendChild(document.createTextNode(l));statusNotice.appendChild(document.createElement('br'));});}
+    function displayFailureNotice(err){console.error(err);setStatusNotice(err instanceof Error?err.message:typeof err==='string'?err:'An unknown error occurred.');setStatusMode('notice');initializing=false;}
+    const missing=Engine.getMissingFeatures({threads:GODOT_THREADS_ENABLED});
+    if(missing.length!==0){displayFailureNotice('Missing features: '+missing.join(', '));}else{setStatusMode('progress');engine.startGame({'onProgress':function(current,total){if(current>0&&total>0){statusProgress.value=current;statusProgress.max=total;}else{statusProgress.removeAttribute('value');statusProgress.removeAttribute('max');}}}).then(()=>setStatusMode('hidden'),displayFailureNotice);}
   <\/script>
 </body></html>`
     },
