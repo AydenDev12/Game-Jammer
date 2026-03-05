@@ -22,6 +22,7 @@
       --c5: #ff6a00;   /* fnaf    */
       --c6: #c8a96e;   /* bendy   */
       --c7: #ff007f;   /* fnf     */
+      --c8: #34c759;   /* retrobowl */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
@@ -175,6 +176,7 @@
     .card[data-game="fnaf"]   { --ca: var(--c5); }
     .card[data-game="bendy"]  { --ca: var(--c6); }
     .card[data-game="fnf"]    { --ca: var(--c7); }
+    .card[data-game="retrobowl"] { --ca: var(--c8); }
     .card[data-game="credits"]{ --ca: var(--cc); }
 
     /* ── CREDITS MODAL ── */
@@ -521,6 +523,23 @@
         </div>
       </div>
 
+      <div class="card" data-game="retrobowl" onclick="openGame('retrobowl')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">RB</div>
+          <div class="art-icon">🏈</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_08</div>
+          <div class="card-title">Retro Bowl</div>
+          <div class="card-desc">Build your team, call the plays, win the championship.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Sports</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" data-game="credits" onclick="openCredits()">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
@@ -574,15 +593,15 @@
   style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
   allowfullscreen allow="fullscreen; autoplay"></iframe>
 
-<!-- Preload Block Blast in background -->
-<iframe id="blockblast-preload"
-  src="https://raw.githack.com/genizy/bl/main/index.html"
-  style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
-  allowfullscreen allow="fullscreen; autoplay"></iframe>
-
 <!-- Preload FNF in background -->
 <iframe id="fnf-preload"
   src="https://raw.githack.com/genizy/fridayfunk/09fdd5f1fa4ddb304dff7bae6f6af49eda664e8f/index.html"
+  style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
+  allowfullscreen allow="fullscreen; autoplay"></iframe>
+
+<!-- Preload Retro Bowl in background -->
+<iframe id="retrobowl-preload"
+  src="https://raw.githack.com/genizy/assets/main/retro-bowl/index.html"
   style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
   allowfullscreen allow="fullscreen; autoplay"></iframe>
 
@@ -629,7 +648,37 @@
     blockblast: {
       label: '💥 Block Blast',
       accent: '#ff2d55',
-      src: 'https://raw.githack.com/genizy/bl/main/index.html'
+      html: `<!DOCTYPE html><html><head>
+  <meta charset="utf-8">
+  <title>Block Blast Puzzle</title>
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/genizy/bl/TemplateData/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/genizy/bl/TemplateData/style.css">
+  <style>body{margin:0;padding:0;background:#000;overflow:hidden;}#unity-container,#unity-canvas{width:100%;height:100%;}</style>
+</head><body>
+  <div id="unity-container">
+    <canvas id="unity-canvas" width="1311" height="852" tabindex="-1" style="cursor:default;width:100%;height:100%;"></canvas>
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full" style="width:100%;"></div></div>
+    </div>
+    <div id="unity-warning"></div>
+  </div>
+  <script>
+    var canvas=document.querySelector("#unity-canvas");
+    var loadingBar=document.querySelector("#unity-loading-bar");
+    var progressBarFull=document.querySelector("#unity-progress-bar-full");
+    var warningBanner=document.querySelector("#unity-warning");
+    function unityShowBanner(msg,type){var div=document.createElement('div');div.innerHTML=msg;warningBanner.appendChild(div);if(type=='error')div.style='background:red;padding:10px;';else if(type=='warning'){div.style='background:yellow;padding:10px;';setTimeout(function(){warningBanner.removeChild(div);},5000);}warningBanner.style.display=warningBanner.children.length?'block':'none';}
+    var buildUrl="https://cdn.jsdelivr.net/gh/genizy/bl/Build";
+    var loaderUrl=buildUrl+"/BlockBlast1.1-8.loader.js";
+    var config={dataUrl:buildUrl+"/BlockBlast1.1-8.data.unityweb",frameworkUrl:buildUrl+"/BlockBlast1.1-8.framework.js.unityweb",codeUrl:buildUrl+"/BlockBlast1.1-8.wasm.unityweb",streamingAssetsUrl:"StreamingAssets",companyName:"reun",productName:"Block Blast Puzzle",productVersion:"1.1",showBanner:unityShowBanner};
+    loadingBar.style.display="block";
+    var script=document.createElement("script");
+    script.src=loaderUrl;
+    script.onload=()=>{createUnityInstance(canvas,config,(progress)=>{progressBarFull.style.width=100*progress+"%";}).then((u)=>{loadingBar.style.display="none";}).catch((m)=>{alert(m);});};
+    document.body.appendChild(script);
+  <\/script>
+</body></html>`
     },
     '2048': {
       label: '🔢 2048',
@@ -659,6 +708,11 @@
       label: '🎤 Friday Night Funkin\'',
       accent: '#ff007f',
       src: 'https://raw.githack.com/genizy/fridayfunk/09fdd5f1fa4ddb304dff7bae6f6af49eda664e8f/index.html'
+    },
+    retrobowl: {
+      label: '🏈 Retro Bowl',
+      accent: '#34c759',
+      src: 'https://raw.githack.com/genizy/assets/main/retro-bowl/index.html'
     }
   };
 
