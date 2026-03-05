@@ -181,19 +181,56 @@
     .card[data-game="gorilla"]   { --ca: var(--ca); }
     .card[data-game="sm64"]      { --ca: var(--cd); }
     .card[data-game="nmn"]       { --ca: var(--ce); }
-    .card[data-game="credits"]{ --ca: var(--cc); }
 
-    /* ── CREDITS MODAL ── */
-    #credits-modal {
+    /* ── HUB TOP BAR ── */
+    .hub-topbar {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px;
+      height: 52px;
+      background: rgba(10,10,18,0.97);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(8px);
+      flex-shrink: 0;
+    }
+    .hub-topbar-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--cc);
+    }
+    #info-btn {
+      background: transparent;
+      border: 1px solid var(--cc);
+      color: var(--cc);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.2em;
+      padding: 6px 14px; cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      border-radius: 2px;
+    }
+    #info-btn:hover {
+      background: var(--cc); color: #0c0c14;
+      box-shadow: 0 0 16px var(--cc);
+    }
+    .hub-separator {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cc), transparent);
+      opacity: 0.25;
+      flex-shrink: 0;
+    }
+
+    /* ── INFO MODAL ── */
+    #info-modal {
       display: none;
       position: fixed; inset: 0; z-index: 50;
-      background: rgba(5,5,8,0.82);
+      background: rgba(5,5,8,0.85);
       backdrop-filter: blur(6px);
       align-items: center; justify-content: center;
     }
-    #credits-modal.open { display: flex; }
+    #info-modal.open { display: flex; }
 
-    .credits-box {
+    .info-box {
       position: relative;
       background: var(--panel);
       border: 1px solid var(--cc);
@@ -207,66 +244,62 @@
       from { opacity:0; transform: scale(0.92) translateY(20px); }
       to   { opacity:1; transform: scale(1) translateY(0); }
     }
-
-    .credits-corner { position: absolute; width: 13px; height: 13px; border-color: var(--cc); border-style: solid; opacity: .7; }
-    .credits-corner.tl { top:8px; left:8px;   border-width: 2px 0 0 2px; }
-    .credits-corner.br { bottom:8px; right:8px; border-width: 0 2px 2px 0; }
-
-    .credits-hammer {
-      font-size: 3.8rem;
-      display: block; text-align: center;
+    .info-corner { position: absolute; width: 13px; height: 13px; border-color: var(--cc); border-style: solid; opacity: .7; }
+    .info-corner.tl { top:8px; left:8px;   border-width: 2px 0 0 2px; }
+    .info-corner.br { bottom:8px; right:8px; border-width: 0 2px 2px 0; }
+    .info-icon {
+      font-size: 3.8rem; display: block; text-align: center;
       margin-bottom: 18px;
       filter: drop-shadow(0 0 22px var(--cc));
     }
-
-    .credits-tag {
+    .info-tag {
       font-size: 0.68rem; color: var(--cc);
-      letter-spacing: 0.3em; text-align: center;
-      margin-bottom: 6px;
+      letter-spacing: 0.3em; text-align: center; margin-bottom: 6px;
     }
-
-    .credits-title {
+    .info-title {
       font-family: 'Orbitron', sans-serif;
       font-size: 1.35rem; font-weight: 700;
       letter-spacing: 0.12em; text-transform: uppercase;
-      text-align: center;
-      color: #e9d5ff;
-      margin-bottom: 24px;
+      text-align: center; color: #e9d5ff; margin-bottom: 24px;
     }
-
-    .credits-divider {
+    .info-divider {
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--cc), transparent);
       opacity: 0.35; margin-bottom: 24px;
     }
-
-    .credits-entry {
+    .info-entry {
       display: flex; justify-content: space-between; align-items: baseline;
       margin-bottom: 13px;
     }
-    .credits-entry:last-of-type { margin-bottom: 0; }
-
-    .credits-role {
+    .info-role {
       font-size: 0.68rem; color: var(--cc);
       letter-spacing: 0.22em; text-transform: uppercase;
     }
-    .credits-name {
-      font-size: 0.82rem; color: var(--text);
-      letter-spacing: 0.08em;
+    .info-name {
+      font-size: 0.82rem; color: var(--text); letter-spacing: 0.08em;
     }
-
-    .credits-close {
-      display: block; width: 100%; margin-top: 28px;
+    .info-warning {
+      margin-top: 22px;
+      border: 1px solid #ff453a;
+      color: #ff453a;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+      text-align: center;
+      padding: 10px 14px;
+      background: rgba(255,69,58,0.07);
+      box-shadow: 0 0 12px rgba(255,69,58,0.15);
+    }
+    .info-close {
+      display: block; width: 100%; margin-top: 20px;
       background: transparent;
       border: 1px solid var(--cc);
       color: var(--cc);
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.78rem; letter-spacing: 0.3em; text-transform: uppercase;
-      padding: 10px;
-      cursor: pointer;
+      padding: 10px; cursor: pointer;
       transition: background 0.2s, color 0.2s, box-shadow 0.2s;
     }
-    .credits-close:hover {
+    .info-close:hover {
       background: var(--cc); color: #0c0c14;
       box-shadow: 0 0 22px var(--cc);
     }
@@ -395,6 +428,11 @@
 
 <!-- ══════════════ HUB ══════════════ -->
 <div id="hub">
+  <div class="hub-topbar">
+    <span class="hub-topbar-title">🕹 Game Jammer</span>
+    <button id="info-btn" onclick="openInfo()">ℹ INFO</button>
+  </div>
+  <div class="hub-separator"></div>
   <div class="hub-inner">
     <header class="header">
       <div class="logo-row">
@@ -578,23 +616,6 @@
         </div>
       </div>
 
-      <div class="card" data-game="credits" onclick="openCredits()">
-        <div class="corner tl"></div><div class="corner br"></div>
-        <div class="card-art">
-          <div class="art-bg">CRD</div>
-          <div class="art-icon">🔨</div>
-        </div>
-        <div class="card-body">
-          <div class="card-num">// META_01</div>
-          <div class="card-title">Credits</div>
-          <div class="card-desc">The minds behind the machine. Built with late nights and bad decisions.</div>
-          <div class="card-foot">
-            <div class="play-row">View <div class="play-arr">▶</div></div>
-            <div class="tag">Info</div>
-          </div>
-        </div>
-      </div>
-
     </div>
 
     <footer class="hub-footer">
@@ -643,32 +664,29 @@
   style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:none;top:-9999px;left:-9999px;"
   allowfullscreen allow="fullscreen; autoplay"></iframe>
 
-<!-- ══════════════ CREDITS MODAL ══════════════ -->
-<div id="credits-modal" onclick="closeCredits(event)">
-  <div class="credits-box">
-    <div class="credits-corner tl"></div>
-    <div class="credits-corner br"></div>
-    <span class="credits-hammer">🔨</span>
-    <div class="credits-tag">// META_01</div>
-    <div class="credits-title">Credits</div>
-    <div class="credits-divider"></div>
-    <div class="credits-entry">
-      <span class="credits-role">Developer</span>
-      <span class="credits-name">Ayden Brown</span>
+<!-- ══════════════ INFO MODAL ══════════════ -->
+<div id="info-modal" onclick="closeInfo(event)">
+  <div class="info-box">
+    <div class="info-corner tl"></div>
+    <div class="info-corner br"></div>
+    <span class="info-icon">ℹ️</span>
+    <div class="info-tag">// ABOUT</div>
+    <div class="info-title">Game Jammer</div>
+    <div class="info-divider"></div>
+    <div class="info-entry">
+      <span class="info-role">Creator</span>
+      <span class="info-name">Ayden Brown</span>
     </div>
-    <div class="credits-entry">
-      <span class="credits-role">Design</span>
-      <span class="credits-name">Ayden Brown</span>
+    <div class="info-entry">
+      <span class="info-role">Built With</span>
+      <span class="info-name">HTML Code</span>
     </div>
-    <div class="credits-entry">
-      <span class="credits-role">Game Curation</span>
-      <span class="credits-name">Ayden Brown</span>
+    <div class="info-entry">
+      <span class="info-role">Version</span>
+      <span class="info-name">1.0.0</span>
     </div>
-    <div class="credits-entry">
-      <span class="credits-role">Built With</span>
-      <span class="credits-name">HTML</span>
-    </div>
-    <button class="credits-close" onclick="closeCredits()">[ Close ]</button>
+    <div class="info-warning">⚠ SOME GAMES MAY NOT WORK</div>
+    <button class="info-close" onclick="closeInfo()">[ Close ]</button>
   </div>
 </div>
 
@@ -932,16 +950,16 @@
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && gameView.classList.contains('active') && !document.fullscreenElement) closeGame();
-    if (e.key === 'Escape' && document.getElementById('credits-modal').classList.contains('open')) closeCredits();
+    if (e.key === 'Escape' && document.getElementById('info-modal').classList.contains('open')) closeInfo();
     if ((e.key === 'f' || e.key === 'F') && gameView.classList.contains('active')) toggleFS();
   });
 
-  function openCredits() {
-    document.getElementById('credits-modal').classList.add('open');
+  function openInfo() {
+    document.getElementById('info-modal').classList.add('open');
   }
-  function closeCredits(e) {
-    if (!e || e.target === document.getElementById('credits-modal') || e.currentTarget === document.querySelector('.credits-close')) {
-      document.getElementById('credits-modal').classList.remove('open');
+  function closeInfo(e) {
+    if (!e || e.target === document.getElementById('info-modal') || e.currentTarget === document.querySelector('.info-close')) {
+      document.getElementById('info-modal').classList.remove('open');
     }
   }
 </script>
