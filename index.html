@@ -23,6 +23,7 @@
       --c6: #c8a96e;   /* bendy   */
       --c7: #ff007f;   /* fnf     */
       --c8: #34c759;   /* retrobowl */
+      --c9: #ffe135;   /* baldi     */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
@@ -177,6 +178,7 @@
     .card[data-game="bendy"]  { --ca: var(--c6); }
     .card[data-game="fnf"]    { --ca: var(--c7); }
     .card[data-game="retrobowl"] { --ca: var(--c8); }
+    .card[data-game="baldi"]     { --ca: var(--c9); }
     .card[data-game="credits"]{ --ca: var(--cc); }
 
     /* ── CREDITS MODAL ── */
@@ -540,6 +542,23 @@
         </div>
       </div>
 
+      <div class="card" data-game="baldi" onclick="openGame('baldi')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">BALDI</div>
+          <div class="art-icon">📏</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_09</div>
+          <div class="card-title">Baldi's Basics Plus</div>
+          <div class="card-desc">Collect notebooks. Answer questions. Don't let Baldi catch you.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Horror</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" data-game="credits" onclick="openCredits()">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
@@ -713,6 +732,43 @@
       label: '🏈 Retro Bowl',
       accent: '#34c759',
       src: 'https://raw.githack.com/genizy/assets/main/retro-bowl/index.html'
+    },
+    baldi: {
+      label: '📏 Baldi\'s Basics Plus',
+      accent: '#ffe135',
+      html: `<!DOCTYPE html><html lang="en-us"><head>
+  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/baldi-plus/">
+  <meta charset="utf-8">
+  <title>Baldi's Basics Plus</title>
+  <style>html,body{margin:0;padding:0;border:0;height:100%;width:100%;overflow:hidden;background:#231F20;}#unity-canvas{width:100%;height:100%;display:block;}#loading-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#ffe135;font-family:monospace;font-size:1rem;letter-spacing:.1em;z-index:999;text-shadow:0 0 10px #ffe135;}</style>
+</head><body>
+  <div id="loading-text">LOADING...</div>
+  <canvas id="unity-canvas" tabindex="-1" style="cursor:none;" width="1311" height="852"></canvas>
+  <script src="Build/Export.loader.js"><\/script>
+  <script>
+    const loadingText = document.querySelector("#loading-text");
+    let totalBytes = 0, loadedBytes = 0;
+    function formatSize(b){return b>1048576?(b/1048576).toFixed(2)+" MB":b>1024?(b/1024).toFixed(2)+" KB":b+" B";}
+    async function getSize(url){try{const r=await fetch(url,{method:"HEAD"});return parseInt(r.headers.get("Content-Length")||"0",10);}catch{return 0;}}
+    async function fetchWithProgress(url){const res=await fetch(url);const reader=res.body.getReader();let chunks=[],received=0;while(true){const{done,value}=await reader.read();if(done)break;received+=value.length;loadedBytes+=value.length;chunks.push(value);if(loadingText)loadingText.textContent="LOADING... "+formatSize(loadedBytes)+" / "+formatSize(totalBytes);}let buf=new Uint8Array(received),off=0;for(let c of chunks){buf.set(c,off);off+=c.length;}return buf.buffer;}
+    async function mergeFiles(parts){const buffers=await Promise.all(parts.map(fetchWithProgress));return URL.createObjectURL(new Blob(buffers));}
+    function getParts(file,count){let p=[];for(let i=1;i<=count;i++)p.push(file+".part"+i);return p;}
+    (async()=>{
+      const dataParts=getParts("Build/Export.data",2);
+      const wasmParts=getParts("Build/Export.wasm",3);
+      const allParts=[...dataParts,...wasmParts];
+      const sizes=await Promise.all(allParts.map(getSize));
+      totalBytes=sizes.reduce((a,b)=>a+b,0);
+      const[dataUrl,wasmUrl]=await Promise.all([mergeFiles(dataParts),mergeFiles(wasmParts)]);
+      createUnityInstance(document.querySelector("#unity-canvas"),{
+        dataUrl:dataUrl,frameworkUrl:"Build/Export.framework.js",codeUrl:wasmUrl,
+        streamingAssetsUrl:"StreamingAssets",companyName:"Basically Games",
+        productName:"Baldi's Basics Plus",productVersion:"0.3.2"
+      }).then(()=>{if(loadingText)loadingText.remove();});
+    })();
+  <\/script>
+  <script src="Build/Export.framework.js"><\/script>
+</body></html>`
     }
   };
 
