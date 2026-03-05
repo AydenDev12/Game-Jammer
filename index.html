@@ -881,41 +881,36 @@
       html: `<!DOCTYPE html><html lang="en-us"><head>
   <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/people-playground/">
   <meta charset="utf-8">
-  <title>People Playground</title>
   <link rel="stylesheet" href="TemplateData/style.css">
-  <style>html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%;}#unity-container{width:100%;height:100%;position:fixed;top:0;left:0;}#loading-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#e8c4a0;font-family:monospace;font-size:1rem;letter-spacing:.1em;z-index:999;text-shadow:0 0 10px #e8c4a0;}</style>
+  <title>People Playground</title>
+  <style>html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%;}#unity-container{width:100%;height:100%;position:fixed;top:0;left:0;}</style>
 </head><body>
-  <div id="loading-text">LOADING...</div>
+  <div id="loading-text" style="color:black;font-size:48px;font-family:cursive;text-align:center;margin-top:20px;">LOADING...</div>
   <div id="unity-container" class="unity-desktop">
-    <canvas id="unity-canvas" tabindex="-1" width="1311" height="852" style="cursor:default;"></canvas>
-    <div id="unity-loading-bar" style="display:none;">
+    <canvas id="unity-canvas" tabindex="-1" width="1311" height="852" style="width:1311px;height:852px;"></canvas>
+    <div id="unity-loading-bar" style="display:block;">
       <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full" style="width:100%;"></div></div>
+      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
     </div>
     <div id="unity-warning"></div>
   </div>
   <script>
-    function unityShowBanner(msg,type){var d=document.createElement('div');d.innerHTML=msg;document.querySelector("#unity-warning").appendChild(d);if(type=='error')d.style='background:red;padding:10px;';else if(type=='warning'){d.style='background:yellow;padding:10px;';setTimeout(()=>d.remove(),5000);}document.querySelector("#unity-warning").style.display=document.querySelector("#unity-warning").children.length?'block':'none';}
-    function mergeFiles(parts){return new Promise((resolve,reject)=>{let buffers=[];function fetchPart(i){if(i>=parts.length){resolve(URL.createObjectURL(new Blob(buffers)));return;}fetch(parts[i]).then(r=>r.arrayBuffer()).then(d=>{buffers.push(d);fetchPart(i+1);}).catch(reject);}fetchPart(0);});}
+    var container=document.querySelector("#unity-container");
+    var canvas=document.querySelector("#unity-canvas");
+    var loadingBar=document.querySelector("#unity-loading-bar");
+    var progressBarFull=document.querySelector("#unity-progress-bar-full");
+    var warningBanner=document.querySelector("#unity-warning");
+    function unityShowBanner(msg,type){var div=document.createElement('div');div.innerHTML=msg;warningBanner.appendChild(div);if(type=='error')div.style='background:red;padding:10px;';else if(type=='warning'){div.style='background:yellow;padding:10px;';setTimeout(()=>{warningBanner.removeChild(div);warningBanner.style.display=warningBanner.children.length?'block':'none';},5000);}warningBanner.style.display=warningBanner.children.length?'block':'none';}
+    function mergeFiles(fileParts){return new Promise((resolve,reject)=>{let buffers=[];function fetchPart(index){if(index>=fileParts.length){resolve(URL.createObjectURL(new Blob(buffers)));return;}fetch(fileParts[index]).then(r=>r.arrayBuffer()).then(d=>{buffers.push(d);fetchPart(index+1);}).catch(reject);}fetchPart(0);});}
     function getParts(file,start,end){let p=[];for(let i=start;i<=end;i++)p.push(file+".part"+i);return p;}
     Promise.all([mergeFiles(getParts("Build/PPG.wasm",1,3)),mergeFiles(getParts("Build/PPG.data",1,6))]).then(([wasmUrl,dataUrl])=>{
-      var canvas=document.querySelector("#unity-canvas");
-      var loadingBar=document.querySelector("#unity-loading-bar");
-      var progressBarFull=document.querySelector("#unity-progress-bar-full");
-      function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.width=window.innerWidth+"px";canvas.style.height=window.innerHeight+"px";}
-      resizeCanvas();window.addEventListener('resize',resizeCanvas);
+      container.hidden=false;
+      var config={dataUrl:dataUrl,frameworkUrl:"Build/PPG.framework.js",codeUrl:wasmUrl,streamingAssetsUrl:"StreamingAssets",companyName:"Studio Minus",productName:"People Playground",productVersion:"0"};
+      if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){var meta=document.createElement('meta');meta.name='viewport';meta.content='width=device-width,height=device-height,initial-scale=1.0,user-scalable=no,shrink-to-fit=yes';document.head.appendChild(meta);container.className="unity-mobile";canvas.className="unity-mobile";}else{function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.width=window.innerWidth+"px";canvas.style.height=window.innerHeight+"px";}resizeCanvas();window.addEventListener('resize',resizeCanvas);}
       loadingBar.style.display="block";
       var script=document.createElement("script");
       script.src="Build/PPG.loader.js";
-      script.onload=()=>{
-        createUnityInstance(canvas,{
-          dataUrl:dataUrl,frameworkUrl:"Build/PPG.framework.js",codeUrl:wasmUrl,
-          streamingAssetsUrl:"StreamingAssets",companyName:"Studio Minus",
-          productName:"People Playground",productVersion:"0",showBanner:unityShowBanner
-        },(progress)=>{progressBarFull.style.width=100*progress+"%";}).then(()=>{
-          loadingBar.style.display="none";document.querySelector("#loading-text").remove();
-        }).catch(alert);
-      };
+      script.onload=()=>{createUnityInstance(canvas,config,(progress)=>{progressBarFull.style.width=100*progress+"%";}).then(()=>{loadingBar.style.display="none";document.querySelector("#loading-text").remove();}).catch(alert);};
       document.body.appendChild(script);
     });
   <\/script>
