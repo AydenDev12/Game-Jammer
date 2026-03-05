@@ -24,6 +24,9 @@
       --c7: #ff007f;   /* fnf     */
       --c8: #34c759;   /* retrobowl */
       --c9: #ffe135;   /* baldi     */
+      --ca: #7ed321;   /* gorilla   */
+      --cb: #e8c4a0;   /* pp        */
+      --cd: #e52521;   /* sm64      */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
@@ -179,6 +182,9 @@
     .card[data-game="fnf"]    { --ca: var(--c7); }
     .card[data-game="retrobowl"] { --ca: var(--c8); }
     .card[data-game="baldi"]     { --ca: var(--c9); }
+    .card[data-game="gorilla"]   { --ca: var(--ca); }
+    .card[data-game="pp"]        { --ca: var(--cb); }
+    .card[data-game="sm64"]      { --ca: var(--cd); }
     .card[data-game="credits"]{ --ca: var(--cc); }
 
     /* ── CREDITS MODAL ── */
@@ -559,6 +565,57 @@
         </div>
       </div>
 
+      <div class="card" data-game="gorilla" onclick="openGame('gorilla')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">GTAG</div>
+          <div class="art-icon">🦍</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_10</div>
+          <div class="card-title">Gorilla Tag</div>
+          <div class="card-desc">Run, jump, and climb as a gorilla. Tag others before they tag you.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Action</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="pp" onclick="openGame('pp')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">PPG</div>
+          <div class="art-icon">🧍</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_11</div>
+          <div class="card-title">People Playground</div>
+          <div class="card-desc">A physics sandbox where anything can happen to anyone.</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Sandbox</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" data-game="sm64" onclick="openGame('sm64')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">SM64</div>
+          <div class="art-icon">⭐</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_12</div>
+          <div class="card-title">Super Mario 64</div>
+          <div class="card-desc">Collect stars, free the castle, and defeat Bowser. It's-a me!</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Platform</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card" data-game="credits" onclick="openCredits()">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
@@ -768,6 +825,128 @@
     })();
   <\/script>
   <script src="Build/Export.framework.js"><\/script>
+</body></html>`
+    },
+    gorilla: {
+      label: '🦍 Gorilla Tag',
+      accent: '#7ed321',
+      html: `<!DOCTYPE html><html lang="en-us"><head>
+  <base href="https://cdn.jsdelivr.net/gh/web-ports/gorilla-tag@latest/">
+  <meta charset="utf-8">
+  <title>Gorilla Tag</title>
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#231F20;}#unity-container{width:100%;height:100%;position:fixed;top:0;left:0;}#loading-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#7ed321;font-family:monospace;font-size:1rem;letter-spacing:.1em;z-index:999;text-shadow:0 0 10px #7ed321;}</style>
+</head><body>
+  <div id="loading-text">LOADING... 0.00 MB / 150.89 MB</div>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" width="1311" height="852" tabindex="-1" style="cursor:default;display:block;"></canvas>
+    <div id="unity-loading-bar" style="display:none;">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full" style="width:100%;"></div></div>
+    </div>
+  </div>
+  <script>
+    var loadingText=document.querySelector("#loading-text");
+    let loadedBytes=0;
+    async function fetchWithProgress(url){const res=await fetch(url);const reader=res.body.getReader();let chunks=[],received=0;while(true){const{done,value}=await reader.read();if(done)break;received+=value.length;loadedBytes+=value.length;chunks.push(value);let mb=(loadedBytes/(1024*1024)).toFixed(2);if(loadingText)loadingText.textContent="LOADING... "+mb+" MB / 150.89 MB";}let buf=new Uint8Array(received),off=0;for(let c of chunks){buf.set(c,off);off+=c.length;}return buf.buffer;}
+    async function mergeFiles(parts){const buffers=await Promise.all(parts.map(p=>fetchWithProgress(p)));return URL.createObjectURL(new Blob(buffers));}
+    function getParts(file,start,end){let p=[];for(let i=start;i<=end;i++)p.push(file+".part"+i);return p;}
+    (async()=>{
+      const[dataUrl]=await Promise.all([mergeFiles(getParts("Build/gtagwebR2.data.unityweb",1,8))]);
+      var canvas=document.querySelector("#unity-canvas");
+      var loadingBar=document.querySelector("#unity-loading-bar");
+      var progressBarFull=document.querySelector("#unity-progress-bar-full");
+      function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.width=window.innerWidth+"px";canvas.style.height=window.innerHeight+"px";}
+      resizeCanvas();window.addEventListener('resize',resizeCanvas);
+      loadingBar.style.display="block";
+      var script=document.createElement("script");
+      script.src="Build/gtagwebR2.loader.js";
+      script.onload=()=>{
+        createUnityInstance(canvas,{
+          dataUrl:dataUrl,frameworkUrl:"Build/gtagwebR2.framework.js.unityweb",
+          codeUrl:"Build/gtagwebR2.wasm.unityweb",streamingAssetsUrl:"StreamingAssets",
+          companyName:"boolonx",productName:"gorilla tag web",productVersion:"1.0"
+        },(progress)=>{progressBarFull.style.width=100*progress+"%";}).then((u)=>{
+          if(loadingText)loadingText.remove();loadingBar.style.display="none";
+        }).catch(alert);
+      };
+      document.body.appendChild(script);
+    })();
+  <\/script>
+</body></html>`
+    },
+    pp: {
+      label: '🧍 People Playground',
+      accent: '#e8c4a0',
+      html: `<!DOCTYPE html><html lang="en-us"><head>
+  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/people-playground/">
+  <meta charset="utf-8">
+  <title>People Playground</title>
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <style>html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%;}#unity-container{width:100%;height:100%;position:fixed;top:0;left:0;}#loading-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#e8c4a0;font-family:monospace;font-size:1rem;letter-spacing:.1em;z-index:999;text-shadow:0 0 10px #e8c4a0;}</style>
+</head><body>
+  <div id="loading-text">LOADING...</div>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" tabindex="-1" width="1311" height="852" style="cursor:default;"></canvas>
+    <div id="unity-loading-bar" style="display:none;">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full" style="width:100%;"></div></div>
+    </div>
+    <div id="unity-warning"></div>
+  </div>
+  <script>
+    function unityShowBanner(msg,type){var d=document.createElement('div');d.innerHTML=msg;document.querySelector("#unity-warning").appendChild(d);if(type=='error')d.style='background:red;padding:10px;';else if(type=='warning'){d.style='background:yellow;padding:10px;';setTimeout(()=>d.remove(),5000);}document.querySelector("#unity-warning").style.display=document.querySelector("#unity-warning").children.length?'block':'none';}
+    function mergeFiles(parts){return new Promise((resolve,reject)=>{let buffers=[];function fetchPart(i){if(i>=parts.length){resolve(URL.createObjectURL(new Blob(buffers)));return;}fetch(parts[i]).then(r=>r.arrayBuffer()).then(d=>{buffers.push(d);fetchPart(i+1);}).catch(reject);}fetchPart(0);});}
+    function getParts(file,start,end){let p=[];for(let i=start;i<=end;i++)p.push(file+".part"+i);return p;}
+    Promise.all([mergeFiles(getParts("Build/PPG.wasm",1,3)),mergeFiles(getParts("Build/PPG.data",1,6))]).then(([wasmUrl,dataUrl])=>{
+      var canvas=document.querySelector("#unity-canvas");
+      var loadingBar=document.querySelector("#unity-loading-bar");
+      var progressBarFull=document.querySelector("#unity-progress-bar-full");
+      function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.width=window.innerWidth+"px";canvas.style.height=window.innerHeight+"px";}
+      resizeCanvas();window.addEventListener('resize',resizeCanvas);
+      loadingBar.style.display="block";
+      var script=document.createElement("script");
+      script.src="Build/PPG.loader.js";
+      script.onload=()=>{
+        createUnityInstance(canvas,{
+          dataUrl:dataUrl,frameworkUrl:"Build/PPG.framework.js",codeUrl:wasmUrl,
+          streamingAssetsUrl:"StreamingAssets",companyName:"Studio Minus",
+          productName:"People Playground",productVersion:"0",showBanner:unityShowBanner
+        },(progress)=>{progressBarFull.style.width=100*progress+"%";}).then(()=>{
+          loadingBar.style.display="none";document.querySelector("#loading-text").remove();
+        }).catch(alert);
+      };
+      document.body.appendChild(script);
+    });
+  <\/script>
+</body></html>`
+    },
+    sm64: {
+      label: '⭐ Super Mario 64',
+      accent: '#e52521',
+      html: `<!DOCTYPE html><html lang="en"><head>
+  <base href="https://cdn.jsdelivr.net/gh/ArkShocer/sm64@main/">
+  <meta charset="utf-8">
+  <style>body,html{background:#000;margin:0;padding:0;overflow:hidden;}canvas{width:100vw;height:100vh;display:block;}#toggle-controls-btn{position:fixed;top:10px;left:10px;z-index:9999;background:rgba(0,0,0,0.7);color:white;border:1px solid #fff;border-radius:8px;font-size:1.2rem;padding:6px 10px;cursor:pointer;}#controls{position:fixed;top:50px;left:10px;background:rgba(0,0,0,0.85);color:white;padding:16px;border-radius:10px;font-family:monospace;font-size:.85rem;z-index:9998;}</style>
+</head><body>
+  <button id="toggle-controls-btn" title="Controls">🎮</button>
+  <div id="controls" hidden="">
+    <strong>Keyboard Controls</strong><br><br>
+    A Button → X &nbsp;|&nbsp; B Button → C<br>
+    L → Q &nbsp;|&nbsp; Z → Space<br>
+    Start → Enter<br>
+    C-Stick → WASD<br><br>
+    <em>Controller supported!</em><br>
+    <em>Save stored in local storage.</em>
+  </div>
+  <div id="container">
+    <canvas class="emscripten" id="canvas" width="1920" height="1080" style="cursor:default;"></canvas>
+  </div>
+  <script>
+    document.getElementById("toggle-controls-btn").addEventListener("click",()=>{const c=document.getElementById("controls");c.hidden=!c.hidden;});
+    var Module={preRun:[],postRun:[],print:(function(){return function(t){if(arguments.length>1)t=Array.prototype.slice.call(arguments).join(" ");console.log(t);};}()),printErr:function(t){if(arguments.length>1)t=Array.prototype.slice.call(arguments).join(" ");console.error(t);},canvas:(function(){var c=document.getElementById("canvas");c.width=window.innerWidth;c.height=window.innerHeight;c.addEventListener("webglcontextlost",function(e){alert("WebGL context lost. Reload the page.");e.preventDefault();},false);window.addEventListener('resize',()=>{c.width=window.innerWidth;c.height=window.innerHeight;});return c;}()),setStatus:function(t){}};
+  <\/script>
+  <script async="" type="text/javascript" src="sm64.us.f3dex2e.js"><\/script>
 </body></html>`
     }
   };
