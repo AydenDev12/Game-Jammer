@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GAME JAMMER</title>
-  <link rel="icon" type="image/png" href="https://media.discordapp.net/attachments/1422034805054509127/1479265666316898354/SPOILER_GJ_1.png?ex=69ab6902&is=69aa1782&hm=925d952fda2e46369a4fc772a03ab8069b8e378161888b3a4e684bb9fec94db4&=&format=webp&quality=lossless&width=960&height=960"/>
+  <link rel="icon" type="image/png" href="favicon.png"/>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -302,6 +302,54 @@
     .info-close:hover {
       background: var(--cc); color: #0c0c14;
       box-shadow: 0 0 22px var(--cc);
+    }
+
+    /* ── SUGGEST A GAME ── */
+    .suggest-label {
+      font-size: 0.68rem; color: var(--cc);
+      letter-spacing: 0.28em; text-transform: uppercase;
+      margin-top: 22px; margin-bottom: 8px;
+      display: block;
+    }
+    .suggest-textarea {
+      width: 100%; resize: none;
+      background: rgba(192,132,252,0.05);
+      border: 1px solid rgba(192,132,252,0.35);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.76rem; letter-spacing: 0.06em;
+      padding: 10px 12px;
+      outline: none;
+      border-radius: 2px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      height: 76px;
+    }
+    .suggest-textarea:focus {
+      border-color: var(--cc);
+      box-shadow: 0 0 12px rgba(192,132,252,0.2);
+    }
+    .suggest-textarea::placeholder { color: var(--dim); }
+    .suggest-send {
+      display: block; width: 100%; margin-top: 8px;
+      background: transparent;
+      border: 1px solid var(--cc);
+      color: var(--cc);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+      padding: 9px; cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .suggest-send:hover {
+      background: var(--cc); color: #0c0c14;
+      box-shadow: 0 0 18px var(--cc);
+    }
+    .suggest-send:disabled {
+      opacity: 0.45; cursor: not-allowed;
+    }
+    .suggest-status {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      text-align: center; margin-top: 8px; min-height: 18px;
+      transition: color 0.3s;
     }
 
     .corner { position: absolute; width: 11px; height: 11px; border-color: var(--ca); border-style: solid; opacity: .55; }
@@ -686,6 +734,11 @@
       <span class="info-name">1.0.0</span>
     </div>
     <div class="info-warning">⚠ SOME GAMES MAY NOT WORK</div>
+    <div class="info-divider" style="margin-top:22px;margin-bottom:0;"></div>
+    <span class="suggest-label">💬 Suggest a Game</span>
+    <textarea class="suggest-textarea" id="suggest-input" placeholder="What game should we add? Tell us..."></textarea>
+    <button class="suggest-send" id="suggest-btn" onclick="sendSuggestion()">[ Send Suggestion ]</button>
+    <div class="suggest-status" id="suggest-status"></div>
     <button class="info-close" onclick="closeInfo()">[ Close ]</button>
   </div>
 </div>
@@ -960,6 +1013,50 @@
   function closeInfo(e) {
     if (!e || e.target === document.getElementById('info-modal') || e.currentTarget === document.querySelector('.info-close')) {
       document.getElementById('info-modal').classList.remove('open');
+    }
+  }
+
+  async function sendSuggestion() {
+    const input = document.getElementById('suggest-input');
+    const btn   = document.getElementById('suggest-btn');
+    const status = document.getElementById('suggest-status');
+    const msg = input.value.trim();
+    if (!msg) {
+      status.style.color = '#ff453a';
+      status.textContent = '⚠ Please type a suggestion first.';
+      return;
+    }
+    btn.disabled = true;
+    status.style.color = 'var(--cc)';
+    status.textContent = 'Sending...';
+    try {
+      const res = await fetch('https://discord.com/api/webhooks/1479266449544581282/4k-YJ7RF47DbW8x4OlnwVfZ-S03U_z7kmr8uDgeKhl8LDHao8L3GUjZkbicQ07k45aqV', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'Game Jammer — Suggestion Box',
+          avatar_url: 'https://cdn-icons-png.flaticon.com/512/3393/3393134.png',
+          embeds: [{
+            title: '🎮 New Game Suggestion!',
+            description: msg,
+            color: 0xc084fc,
+            footer: { text: 'Game Jammer • Suggestion Box' },
+            timestamp: new Date().toISOString()
+          }]
+        })
+      });
+      if (res.ok || res.status === 204) {
+        status.style.color = '#34c759';
+        status.textContent = '✓ Suggestion sent! Thanks!';
+        input.value = '';
+      } else {
+        throw new Error('Bad response: ' + res.status);
+      }
+    } catch (err) {
+      status.style.color = '#ff453a';
+      status.textContent = '✗ Failed to send. Try again.';
+    } finally {
+      btn.disabled = false;
     }
   }
 </script>
