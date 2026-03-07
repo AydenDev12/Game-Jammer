@@ -15,7 +15,6 @@
       --border: #1a1a2e;
       --text: #e0e0f0;
       --dim: #44445a;
-      --c1: #00ffe7;   /* primary cyan */
       --c2: #ff2d55;   /* block blast  */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
@@ -29,6 +28,7 @@
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
+      --cf: #69ceec;   /* crossy road */
     }
 
     html, body {
@@ -182,6 +182,7 @@
     .card[data-game="gorilla"]   { --ca: var(--ca); }
     .card[data-game="sm64"]      { --ca: var(--cd); }
     .card[data-game="nmn"]       { --ca: var(--ce); }
+    .card[data-game="crossy"]    { --ca: var(--cf); }
 
     /* ── HUB TOP BAR ── */
     .hub-topbar {
@@ -665,6 +666,23 @@
         </div>
       </div>
 
+      <div class="card" data-game="crossy" onclick="openGame('crossy')">
+        <div class="corner tl"></div><div class="corner br"></div>
+        <div class="card-art">
+          <div class="art-bg">CRSY</div>
+          <div class="art-icon">🐔</div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">// GAME_13</div>
+          <div class="card-title">Crossy Road</div>
+          <div class="card-desc">Hop across roads, rivers, and railways. Don't get squashed!</div>
+          <div class="card-foot">
+            <div class="play-row">Play <div class="play-arr">▶</div></div>
+            <div class="tag">Arcade</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <footer class="hub-footer">
@@ -952,6 +970,11 @@
   <\/script>
   <script async="" type="text/javascript" src="sm64.us.f3dex2e.js"><\/script>
 </body></html>`
+    },
+    crossy: {
+      label: '🐔 Crossy Road',
+      accent: '#69ceec',
+      src: 'https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@latest/crossy-road/'
     }
   };
 
