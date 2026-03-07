@@ -15,6 +15,7 @@
       --border: #1a1a2e;
       --text: #e0e0f0;
       --dim: #44445a;
+      --c1: #00ffe7;   /* primary cyan */
       --c2: #ff2d55;   /* block blast  */
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
@@ -28,7 +29,7 @@
       --c4: #bf5af2;   /* flappy  */
       --c5: #ff6a00;   /* fnaf    */
       --cc: #c084fc;   /* credits */
-      --cf: #00c2ff;   /* repo */
+      --cf: #5da832;   /* minecraft */
     }
 
     html, body {
@@ -182,7 +183,7 @@
     .card[data-game="gorilla"]   { --ca: var(--ca); }
     .card[data-game="sm64"]      { --ca: var(--cd); }
     .card[data-game="nmn"]       { --ca: var(--ce); }
-    .card[data-game="repo"]      { --ca: var(--cf); }
+    .card[data-game="minecraft"] { --ca: var(--cf); }
 
     /* ── HUB TOP BAR ── */
     .hub-topbar {
@@ -666,19 +667,19 @@
         </div>
       </div>
 
-      <div class="card" data-game="repo" onclick="openGame('repo')">
+      <div class="card" data-game="minecraft" onclick="openGame('minecraft')">
         <div class="corner tl"></div><div class="corner br"></div>
         <div class="card-art">
-          <div class="art-bg">REPO</div>
-          <div class="art-icon">🤖</div>
+          <div class="art-bg">MC</div>
+          <div class="art-icon">⛏️</div>
         </div>
         <div class="card-body">
           <div class="card-num">// GAME_13</div>
-          <div class="card-title">R.E.P.O</div>
-          <div class="card-desc">Collect valuable items and bring them back. Don't get caught.</div>
+          <div class="card-title">Minecraft</div>
+          <div class="card-desc">Mine, build, survive. Full 1.21.4 web client — singleplayer & servers.</div>
           <div class="card-foot">
             <div class="play-row">Play <div class="play-arr">▶</div></div>
-            <div class="tag">Survival</div>
+            <div class="tag">Sandbox</div>
           </div>
         </div>
       </div>
@@ -971,47 +972,10 @@
   <script async="" type="text/javascript" src="sm64.us.f3dex2e.js"><\/script>
 </body></html>`
     },
-    crossy: {
-      label: '🤖 R.E.P.O',
-      accent: '#00c2ff',
-      html: `<!DOCTYPE html><html lang="en-us"><head>
-  <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/repo/">
-  <meta charset="utf-8">
-  <title>R.E.P.O</title>
-  <link rel="stylesheet" href="TemplateData/style.css">
-  <style>html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%;}#unity-container{width:100%;height:100%;position:fixed;top:0;left:0;}</style>
-</head><body>
-  <div id="unity-container" class="unity-desktop">
-    <canvas id="unity-canvas" tabindex="-1" width="1311" height="852" style="width:1311px;height:852px;cursor:none;"></canvas>
-    <div id="unity-loading-bar" style="display:none;">
-      <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty"><div id="unity-progress-bar-full" style="width:100%;"></div></div>
-    </div>
-    <div id="unity-warning"></div>
-  </div>
-  <script>
-    var container=document.querySelector("#unity-container");
-    var canvas=document.querySelector("#unity-canvas");
-    var loadingBar=document.querySelector("#unity-loading-bar");
-    var progressBarFull=document.querySelector("#unity-progress-bar-full");
-    var warningBanner=document.querySelector("#unity-warning");
-    function unityShowBanner(msg,type){var div=document.createElement('div');div.innerHTML=msg;warningBanner.appendChild(div);if(type=='error')div.style='background:red;padding:10px;';else{if(type=='warning'){div.style='background:yellow;padding:10px;';setTimeout(function(){warningBanner.removeChild(div);},5000);}}warningBanner.style.display=warningBanner.children.length?'block':'none';}
-    function mergeFiles(fileParts){return new Promise((resolve,reject)=>{let buffers=[];function fetchPart(index){if(index>=fileParts.length){let mergedBlob=new Blob(buffers);resolve(URL.createObjectURL(mergedBlob));return;}fetch(fileParts[index]).then(r=>r.arrayBuffer()).then(data=>{buffers.push(data);fetchPart(index+1);}).catch(reject);}fetchPart(0);});}
-    function getParts(file,start,end){let parts=[];for(let i=start;i<=end;i++)parts.push(file+".part"+i);return parts;}
-    Promise.all([mergeFiles(getParts("Build/NewestBuild.wasm.gz",1,3)),mergeFiles(getParts("Build/NewestBuild.data.gz",1,16))]).then(([wasmUrl,dataUrl])=>{
-      container.hidden=false;
-      var buildUrl="Build";
-      var config={dataUrl:dataUrl,frameworkUrl:buildUrl+"/NewestBuild.framework.js",codeUrl:wasmUrl,streamingAssetsUrl:"StreamingAssets",companyName:"Stupid Game",productName:"R.E.P.O",productVersion:"0.1"};
-      function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;canvas.style.width=window.innerWidth+"px";canvas.style.height=window.innerHeight+"px";}
-      resizeCanvas();window.addEventListener('resize',resizeCanvas);
-      loadingBar.style.display="block";
-      var script=document.createElement("script");
-      script.src=buildUrl+"/NewestBuild.loader.js";
-      script.onload=()=>{createUnityInstance(canvas,config,(progress)=>{progressBarFull.style.width=100*progress+"%";}).then((u)=>{loadingBar.style.display="none";}).catch(alert);};
-      document.body.appendChild(script);
-    });
-  <\/script>
-</body></html>`
+    minecraft: {
+      label: '⛏️ Minecraft',
+      accent: '#5da832',
+      src: 'https://cdn.jsdelivr.net/gh/zinkowinko/mc@da8c2b8c95dda2d751370c89e03f277b31042d69/data/1.21.4/'
     }
   };
 
